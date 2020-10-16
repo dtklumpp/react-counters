@@ -4,7 +4,7 @@ By building this simple application, we'll explore the concepts of state, the di
 
 For this exercise, we are going to build a React app from scratch that will serve as an [Abacus](https://en.wikipedia.org/wiki/Abacus) of sorts.
 
-Go ahead and clone [this repo](git clone https://git.generalassemb.ly/WC-SEI-817/react-counters) now. This will be the code we start with.
+Go ahead and clone [this repo](https://git.generalassemb.ly/WC-SEI-817/react-counters) now. This will be the code we start with.
 
 ```bash
 $ git clone https://git.generalassemb.ly/WC-SEI-817/react-counters
