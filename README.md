@@ -9,7 +9,6 @@ Go ahead and clone [this repo](https://git.generalassemb.ly/WC-SEI-817/react-cou
 ```bash
 $ git clone https://git.generalassemb.ly/WC-SEI-817/react-counters
 $ cd react-counters
-$ npm update
 $ npm install
 $ npm start
 ```
