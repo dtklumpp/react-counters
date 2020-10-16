@@ -27,17 +27,6 @@ Look at this [deployed version of the application](http://react-counter.surge.sh
 ### Components
 
 <details>
-  <summary><strong>Open to see the components</strong></summary>
-
-Here we've identified four components on the home page:
-  1. The top level component, which we'll call `App`, is boxed in red
-  2. The header component, a sub-component of `App`, is boxed in purple. We'll call it `Header`
-  3. The list of counters, also a sub-component of `App`, is boxed in blue. We'll called it `CounterList`
-  4. An individual container, a sub-component of `CounterList`, is boxed in green. We'll call it `Counter`
-
-</details>
-
-<details>
   <summary><strong>Open to see component hierarchy</strong></summary>
 
   <h4>Component Hierarchy</h4>
