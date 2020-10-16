@@ -3,14 +3,11 @@ import Counter from './Counter';
 
 class CounterList extends Component {
 
-    state = {
-        number: this.props.count,
-    }
 
     render() {
 
         const counterSet = [];
-        for (let i = 0; i < this.state.number; i++){
+        for (let i = 0; i < this.props.count; i++){
             counterSet.push(<Counter className="counter" key={i}/>);
         }
         console.log(counterSet);
