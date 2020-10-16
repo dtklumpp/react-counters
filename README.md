@@ -69,7 +69,7 @@ First we will [build a static version](https://facebook.github.io/react/docs/thi
 
 ### You Do: Set Up the `App` Component and `index.js`
 
-Try to get it so that your `App` component displays the number of counters underneath the `Header` component (provided in the starter code).
+Try to get it so that your `App` component displays the number "5" (which will be the number of counters) underneath the `Header` component (provided in the starter code).
 
 <details>
 	<summary>Solution</summary>
@@ -112,7 +112,7 @@ export default App;
 
 ### You Do: Set Up the `CounterList` and `Counter` Components
 
-Your `CounterList` component should take the number of counters as a prop and then render that many versions of your `Counter` component. Your `Counter` component will render `"Counter: 0"` inside of an `<h4>` and two buttons (one for incrementing and one for decrementing).
+Your `CounterList` component should take the number of counters as a prop (how will you pass this number from `App` to `CounterList`?) and then render that many versions of your `Counter` component. Your `Counter` component will render `"Counter: 0"` inside of an `<h4>` and two buttons (one for incrementing and one for decrementing).
 
 **Tip:** You can render an array of components! It looks something like this:
 
@@ -120,7 +120,7 @@ Your `CounterList` component should take the number of counters as a prop and th
 // This is an example, don't copy-paste this code into your Counters app
 class List extends Component {
   render() {
-    let list = [<Item />, <Item />, <Item />];
+    const list = [<Item />, <Item />, <Item />];
 
     return <div className="list">{list}</div>;
   }
@@ -130,6 +130,27 @@ class List extends Component {
 <details>
 	<summary>Solution</summary>
 	
+`App.js`:
+
+```js
+import React, { Component } from "react";
+import Header from "./Header";
+import CounterList from "./CounterList";
+
+class App extends Component {
+    render() {
+      return (
+        <div className="App">
+          <Header />
+          <CounterList counters={this.state.counters} />
+        </div>
+      );
+    }
+  }
+
+export default App;
+```
+
 `CounterList.js`:
 
 ```js
@@ -138,8 +159,8 @@ import Counter from "./Counter";
 
 class CounterList extends Component {
   render() {
-    let counters = [];
-    for (let index = 0; index < this.props.counter; index++) {
+    const counters = [];
+    for (let index = 0; index < this.props.counters; index++) {
       counters.push(<Counter />);
     }
     return <div className="Counter-row">{counters}</div>;
@@ -158,7 +179,7 @@ class Counter extends Component {
   render() {
     return (
       <div className="Counter">
-        <h4>Counter :0</h4>
+        <h4>Counter: 0</h4>
         <button>Decrement</button>
         <button>Increment</button>
       </div>
@@ -167,6 +188,10 @@ class Counter extends Component {
 }
 
 export default Counter;
+
+import React, { Component } from "react";
+import Header from "./Header";
+import CounterList from "./CounterList";
 ```
 
 </details>
@@ -174,7 +199,7 @@ export default Counter;
 
 ## Identify the Minimal Representation of UI State 
 
-At the moment all of our data is being passed through our app as props. We know, however, that we will have data that changes as a user interacts with the app. That information needs to live in our application's state. We need to figure out what the [minimal amount of state](https://facebook.github.io/react/docs/thinking-in-react.html#step-3-identify-the-minimal-but-complete-representation-of-ui-state) our app needs and what components need it.
+At the moment all of our data is being passed through our app as props. We know, however, that we will have data that changes as a user interacts with the app. That information needs to live in our application's state. We need to figure out the [minimal amount of state](https://facebook.github.io/react/docs/thinking-in-react.html#step-3-identify-the-minimal-but-complete-representation-of-ui-state) that our app needs and what components need it.
 
 ### You Do: What information needs to live in state? 
 
@@ -201,7 +226,7 @@ Lets start with our `Counter` component. Right now, it doesn't have any state an
 
 ### You Do: Update our `Counter` Component
 
-Lets update the `Counter` component so that it is using state to track the count internally and clicking one of the buttons changes the `count` number.
+Lets update the `Counter` component so that it is using state to track the count internally, as well as making it possible to click either of the buttons in order to change the `count` number.
 
 <details>
 	<summary>Solution</summary>
@@ -215,18 +240,18 @@ class Counter extends Component {
 +    };	
 +
 +  increaseCount = () => {
-+    let count = this.state.count + 1;
++    const count = this.state.count + 1;
 +
 +    this.setState({
-+      count
++      count: count
 +    });
 +  }
 +
 +  decreaseCount = () => {
-+    let count = this.state.count - 1;
++    const count = this.state.count - 1;
 +
 +    this.setState({
-+      count
++      count: count
 +    });
 +  }
 
@@ -247,7 +272,7 @@ export default Counter;
 ```
 </details>
 
-Now that we've made it so our `Counter` component is tracking it's count inside of state, we need to update our application so that the prop determining the number of counters is controlled by state.
+Now that we've made it so our `Counter` component is tracking its count inside of state, we need to update our application so that the prop determining the number of counters is controlled by state.
 
 This segues nicely into the idea of Container and Presentational Components.
 
@@ -255,9 +280,9 @@ This segues nicely into the idea of Container and Presentational Components.
 
 The above workflow has led to the popular component architecture of distinguishing [Container and Presentational Components](https://medium.com/@dan_abramov/smart-and-dumb-components-7ca2f9a7c7d0).
 
-**Presentational components** are components that render themselves based solely on the information that they receive from props. At this point, all of our components are presentational.
+**Container components** are components whose job it is to exclusively manage state and and render presentational components, passing them the data they need as props. None of our components are container components yet because none of them exclusively manage state AND render presentational components.
 
-**Container components** are components whose job it is to exclusively manage state and and render presentational components, passing them the data they need as props.
+**Presentational components** are components that render themselves based solely on the information that they receive from props. At this point, all of our components are presentational.
 
 This leads to a very nice division where state management and presentation are cleanly separated.
 
@@ -265,7 +290,7 @@ Our `App` component could be a **container component!**
 
 ### You Do: Update `App`
 
-We want to update `App` so that it is tracking the number of counters to render in it's `state`. To do that, we need to update our component.
+We want to update `App` so that it is tracking the number of counters to render in its `state`. To do that, we need to update our component.
 
 Make it so that the `App` component is tracking the number of counters (5) inside state and passing that as a prop to the `CounterList` component.
 
@@ -279,21 +304,16 @@ import Header from "./Header";
 import CounterList from "./CounterList";
 
 class App extends Component {
-+  // This is an alternative syntax for defining state that you may see in older React apps.
-+  constructor() {
-+    super();
-+
-+    this.state = {
-+      counters: 5
-+    };
++  state = {
++    counters: 5
 +  }
 
   render() {
     return (
       <div className="App">
         <Header />
--        <CounterList counter={this.props.data.counters} />
-+        <CounterList counter={this.state.counters} />
+-        <CounterList counters={this.props.data.counters} />
++        <CounterList counters={this.state.counters} />
       </div>
     );
   }
@@ -317,4 +337,84 @@ We can give presentational components behavior by passing callback functions to 
 
 Define an `increaseCounters()` method and `decreaseCounters()` method on the `App` component (they'll be a lot like the `increaseCount()` and `decreaseCount()` methods of our `Counter` component).
 
-Once your two methods are defined, pass them both to the `Header` component as props. What do you need to do inside of `Header` to make it so that when someone clicks on one of the buttons the number of counters increases or decreases?
+Once your two methods are defined, pass them both to the `Header` component as props. What do you need to do inside of `Header` to make it so that when someone clicks on one of the buttons the number of counters increases or decreases? And, let's be sure to prevent the number of counters from going into negative numbers.
+
+<details>
+	<summary>Solution</summary>
+	
+`App.js`:
+
+```diff
+import React, { Component } from "react";
+import Header from "./Header";
+import CounterList from "./CounterList";
+
+class App extends Component {
+  state = {
+-    counters: 5
++    counters: 0
+  }
+
++  increaseCounters = () => {
++    const counters = this.state.counters + 1;
++    this.setState({
++    	counters: counters
++    })
++  }
+
++  decreaseCounters = () => {
++    const counters = this.state.counters - 1;
++    this.setState({
++    	counters: counters
++    })
++  }
+
+  render() {
+    return (
+      <div className="App">
+-        <Header />
++        <Header 
++          increaseCounters={this.increaseCounters} 
++          decreaseCounters={this.decreaseCounters} />
+        <CounterList counters={this.state.counters} />
+      </div>
+    );
+  }
+}
+
+export default App;
+```
+
+`Header.js`:
+
+```diff
+import React, { Component } from "react";
+
+class Header extends Component {
+  
++  handleIncrement = () => {
++    this.props.increaseCounters()
++  }
+
++  handleDecrement = () => {
++    this.props.countersCount > 0 ?
++      this.props.decreaseCounters():
++      null
++  }
+
+  render() {
+    return (
+      <header className="App-header">
+        <h1 className="App-title">React Counters</h1>
+-	<button>+</button>
++        <button onClick={ this.handleIncrement }>+</button>
+-        <button>-</button>
++	<button onClick={ this.handleDecrement }>-</button>
+      </header>
+    );
+  }
+}
+
+export default Header;
+```
+</details>
